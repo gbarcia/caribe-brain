@@ -1,0 +1,29 @@
+# Entorno virtual
+.claude/venv/
+
+# Base de datos y estado
+.claude/data/
+
+# Logs
+.claude/logs/
+
+# Caché de Python
+__pycache__/
+*.pyc
+
+# Secretos
+.env
+credentials.json
+token.json
+token.pickle
+
+# macOS
+.DS_Store
+
+# Archivos del editor
+*.swp
+*.swo
+*~
+
+# Modelo de embeddings cacheado
+.fastembed/
