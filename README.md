@@ -24,7 +24,7 @@
   <img src="caribebrain-banner.png" alt="CaribeBrain" width="600">
 </p>
 
-Un segundo cerebro con IA que corre 24/7 en tu Mac. Usa Claude CLI como cerebro, Telegram como interfaz de chat, y archivos Markdown como memoria persistente.
+Un segundo cerebro con IA que corre 24/7 en tu ordenador. Usa Claude CLI como cerebro, Telegram como interfaz de chat, y archivos Markdown como memoria persistente.
 
 ## Cómo funciona
 
@@ -82,6 +82,10 @@ Sigue los pasos que imprime al final para autenticar Claude, configurar integrac
 - Node.js 18+
 - Claude CLI (`npm install -g @anthropic-ai/claude-code`)
 - Cuenta de Anthropic
+
+## Más información
+
+Para más información sobre CaribeBrain, visita [https://www.linkedin.com/pulse/por-qu%25C3%25A9-constru%25C3%25AD-mi-propio-segundo-cerebro-en-lugar-de-gerardo-barcia-swb8f/] este artículo.
 
 ## Créditos
 
