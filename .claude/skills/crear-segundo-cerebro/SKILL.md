@@ -1,6 +1,6 @@
 # Skill: Crear Segundo Cerebro
 
-Genera un segundo cerebro con IA completamente funcional, personalizado según los requisitos del usuario. El sistema corre 24/7 en macOS usando Claude CLI como cerebro, Telegram como interfaz, y Markdown como memoria.
+Genera un segundo cerebro con IA completamente funcional, personalizado según los requisitos del usuario. El sistema corre 24/7 en cualquier computadora (macOS, Linux o Windows con WSL) usando Claude CLI como cerebro, Telegram como interfaz, y Markdown como memoria.
 
 ## Uso
 
@@ -26,7 +26,8 @@ Extrae estas variables del cuestionario:
 - `ZONA_HORARIA` — zona horaria (ej. America/Mexico_City)
 - `IDIOMAS` — idiomas del usuario
 - `NIVEL_PROACTIVIDAD` — Observador / Asesor / Asistente / Compañero
-- `TIPO_DESPLIEGUE` — Un Mac / Dos Macs / Mac + Cloud
+- `TIPO_DESPLIEGUE` — Una máquina / Dos máquinas / Local + Cloud
+- `SISTEMA_OPERATIVO` — macOS / Linux / Windows (WSL)
 - `INTEGRACION_1`, `INTEGRACION_2`, `INTEGRACION_3` — top 3 integraciones
 - `TAREAS` — lista de tareas prioritarias
 - `LIMITES` — límites de seguridad marcados
@@ -139,7 +140,7 @@ Generar con: nombre, rol, descripción, zona horaria, idiomas, tipo de despliegu
 ```
 
 #### Memory/HEARTBEAT.md
-Generar checklist de monitoreo basado en las plataformas seleccionadas. Solo incluir elementos para plataformas que el usuario marcó. Incluir reglas de notificación (ALTA/MEDIA/BAJA) y reglas de borradores si el nivel es Asesor o superior.
+Generar checklist de monitoreo basado en las plataformas seleccionadas. Solo incluir elementos para plataformas que el usuario marcó. Incluir reglas de notificación (ALTA/MEDIA/BAJA) y reglas de borradores si el nivel es Asesor o superior. Para notificaciones, usar el método nativo del SO: `osascript` en macOS, `notify-send` en Linux, `powershell` toast en Windows/WSL.
 
 #### Memory/HABITS.md
 Inferir 5 pilares de hábitos del perfil del usuario. Ejemplo: si es desarrollador, los pilares pueden ser Código, Aprendizaje, Networking, Salud, Side Project. Si es PM, pueden ser Producto, Equipo, Aprendizaje, Salud, Estrategia. Incluir tabla de auto-detección con métodos basados en las integraciones disponibles.
@@ -187,7 +188,11 @@ Monitor proactivo. Corre cada 30 minutos (8 AM - 10 PM hora del usuario).
 - `build_context()` — arma reporte Markdown con todos los datos recopilados y contexto de hora del día
 - `invoke_claude(context)` — llama `claude --print --system-prompt ... prompt` con timeout 60s
 - El system prompt le dice al agente que genere máximo 5 puntos prioritarios en formato `[ALTA/MEDIA/BAJA]`
-- `send_notification()` — notificación macOS via `osascript`
+- `send_notification()` — notificación nativa del SO:
+  - macOS: `osascript -e 'display notification ...'`
+  - Linux: `notify-send`
+  - Windows/WSL: `powershell.exe -Command "New-BurntToastNotification ..."` o fallback a print
+  - Detectar SO con `sys.platform`
 - `append_to_daily_log()` — agrega resultado al log diario
 - Horas activas ajustadas a la zona horaria del usuario
 
@@ -203,7 +208,7 @@ Vigilante del bot de Telegram. Corre cada 5 minutos.
 - Lee archivo de salud (`telegrambot-health.txt`) que el bot escribe cada 2 min
 - Si tiene más de 600 segundos de antigüedad, envía SIGTERM al proceso del bot
 - Si no muere en 10 segundos, envía SIGKILL
-- launchd se encarga de reiniciar el bot
+- El scheduler del SO se encarga de reiniciar el bot
 
 ### Paso 6 — Generar hooks de Claude Code
 
@@ -281,17 +286,27 @@ Bot usando `python-telegram-bot`. Funcionalidad:
 
 ### Paso 11 — Generar bootstrap.sh
 
-Script de setup que:
-1. Pregunta nombre del agente al inicio
-2. Instala Xcode CLT, Homebrew, Python, Node, gh CLI, Claude CLI
-3. Crea venv en `.claude/venv/`, instala requirements.txt
-4. Crea directorios del vault si no existen
-5. Ejecuta indexación inicial
-6. Genera 4 plists de launchd (heartbeat, reflexión, telegram bot, watchdog) con el nombre del agente en el label
-7. Marca scripts como ejecutables
-8. Imprime siguientes pasos manuales: claude login, gh auth, alias, Google APIs, Telegram bot, permisos macOS, activar daemons
+Script de setup multiplataforma que:
+1. Detecta el SO (`uname -s` → Darwin/Linux; si es WSL, detecta via `/proc/version`)
+2. Pregunta nombre del agente al inicio
+3. Instala dependencias según el SO:
+   - **macOS**: Homebrew → Python, Node, gh CLI
+   - **Linux/WSL**: apt/dnf/pacman → Python, Node, gh CLI
+4. Instala Claude CLI (`npm install -g @anthropic-ai/claude-code`)
+5. Crea venv en `.claude/venv/`, instala requirements.txt
+6. Crea directorios del vault si no existen
+7. Ejecuta indexación inicial
+8. Genera las tareas programadas según el SO:
+   - **macOS**: 4 plists de launchd en `~/Library/LaunchAgents/` con label `com.{agente}.{daemon}`
+   - **Linux**: 4 servicios systemd en `~/.config/systemd/user/` con archivos `.service` y `.timer`
+   - **WSL**: crontab entries para los 4 daemons
+9. Marca scripts como ejecutables
+10. Imprime siguientes pasos manuales adaptados al SO
 
-Los plists usan `com.{nombre-agente-lowercase}.{daemon}.plist` como label.
+Para activar los daemons:
+- **macOS**: `launchctl load ~/Library/LaunchAgents/com.{agente}.heartbeat.plist`
+- **Linux**: `systemctl --user enable --now {agente}-heartbeat.timer`
+- **WSL**: los crontabs se activan automáticamente
 
 ### Paso 12 — Generar archivos auxiliares
 
@@ -328,7 +343,7 @@ Cada fase incluye: objetivo, archivos involucrados, comandos de verificación, c
 - Base de datos: SQLite + sqlite-vec (vectores) + FTS5 (keywords)
 - Búsqueda: Híbrida 70% vector + 30% keyword (BM25)
 - Chunking: 400 tokens objetivo, 50 tokens solapamiento, divide por headers Markdown
-- Daemons: launchd (macOS nativo)
+- Daemons: launchd (macOS), systemd (Linux), cron (WSL)
 - Bot: python-telegram-bot
 - Seguridad: guardrails deterministas + sanitización de datos + trust boundaries
 
@@ -348,7 +363,7 @@ python-dotenv
 1. Todo en Markdown — portable, legible, versionable con git
 2. Solo lectura por defecto — nunca actúa sin permiso
 3. Sin frameworks pesados — Python puro, SQLite, scripts simples
-4. CPU-only — funciona en cualquier Mac sin GPU
+4. CPU-only — funciona en cualquier máquina sin GPU
 5. Incremental — solo re-indexa lo que cambió
 6. Resiliente — si algo falla, el sistema sigue funcionando en modo degradado
 

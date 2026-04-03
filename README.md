@@ -24,7 +24,7 @@
   <img src="caribebrain-banner.png" alt="CaribeBrain" width="600">
 </p>
 
-Un segundo cerebro con IA que corre 24/7 en tu ordenador. Usa Claude CLI como cerebro, Telegram como interfaz de chat, y archivos Markdown como memoria persistente.
+Un segundo cerebro con IA que corre 24/7 en tu computadora. Funciona en macOS, Linux y Windows (WSL). Usa Claude CLI como cerebro, Telegram como interfaz de chat, y archivos Markdown como memoria persistente.
 
 ## Cómo funciona
 
@@ -71,8 +71,8 @@ Sigue los pasos que imprime al final para autenticar Claude, configurar integrac
 
 - **Pipeline RAG** — chunking de Markdown, embeddings vectoriales (384 dims), búsqueda híbrida 70% vector + 30% keyword
 - **4 hooks de Claude** — inyección de memoria, guardrails de seguridad, flush pre-compactación, resumen al cerrar sesión
-- **4 daemons via launchd** — heartbeat cada 30 min, reflexión diaria, bot de Telegram, watchdog
-- **Integraciones read-only** — Gmail, Google Calendar, Google Drive, Apple Reminders, GitHub, Telegram
+- **4 daemons** — heartbeat cada 30 min, reflexión diaria, bot de Telegram, watchdog (launchd en macOS, systemd en Linux, cron en WSL)
+- **Integraciones read-only** — Gmail, Google Calendar, Google Drive, GitHub, Telegram, Apple Reminders (macOS), y más
 - **Sistema de seguridad** — guardrails deterministas, sanitización anti-inyección, trust boundaries
 - **Vault de memoria** — personalidad del agente, perfil de usuario, memoria a largo plazo, hábitos, monitoreo
 

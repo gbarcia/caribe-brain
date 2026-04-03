@@ -12,7 +12,7 @@
 - **Qué haces:** (1-2 oraciones)
 - **Zona horaria:** (ej. America/Mexico_City)
 - **Idiomas:** (primario y secundarios)
-- **Sistema operativo:** macOS
+- **Sistema operativo:** (macOS / Linux / Windows con WSL)
 - **Nombre de tu agente:** (ej. MiCerebro, Atlas, etc.)
 
 ---
@@ -25,7 +25,7 @@ Marca con [x] las que usas:
 - [ ] Google Calendar
 - [ ] Google Drive
 - [ ] Telegram
-- [ ] Apple Reminders
+- [ ] Apple Reminders (solo macOS)
 - [ ] GitHub
 - [ ] Slack
 - [ ] Notion
@@ -94,14 +94,15 @@ Marca las que te importan:
 ## 7. Infraestructura
 
 - **Despliegue:** (elige uno)
-  - [ ] Un solo Mac (desarrollo + producción)
-  - [ ] Dos Macs (desarrollo en uno, producción en otro via SSH)
-  - [ ] Mac + servidor cloud (VPS / EC2)
+  - [ ] Una sola máquina (desarrollo + producción)
+  - [ ] Dos máquinas (desarrollo en una, producción en otra via SSH)
+  - [ ] Local + servidor cloud (VPS / EC2)
 
-- **Mac de producción:** (si aplica)
-  - Modelo: ___________
+- **Máquina de producción:** (si aplica)
+  - SO: ___________
+  - Modelo/specs: ___________
   - IP fija local: ___________
-  - Tapa cerrada (headless): sí / no
+  - Headless (sin monitor): sí / no
 
 ---
 

@@ -11,7 +11,7 @@
 - **Qué haces:** Coordino equipos de producto y diseño. Gestiono roadmaps y priorizo features.
 - **Zona horaria:** America/Mexico_City
 - **Idiomas:** Español (primario), Inglés (fluido)
-- **Sistema operativo:** macOS
+- **Sistema operativo:** macOS (también funciona en Linux o Windows con WSL)
 - **Nombre de tu agente:** Atlas
 
 ---
@@ -81,11 +81,11 @@
 ## 7. Infraestructura
 
 - **Despliegue:**
-  - [x] Un solo Mac (desarrollo + producción)
-  - [ ] Dos Macs
-  - [ ] Mac + servidor cloud
+  - [x] Una sola máquina (desarrollo + producción)
+  - [ ] Dos máquinas
+  - [ ] Local + servidor cloud
 
-- **Mac de producción:** N/A (mismo Mac)
+- **Máquina de producción:** N/A (misma máquina)
 
 ---
 
