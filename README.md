@@ -26,6 +26,14 @@
 
 Un segundo cerebro con IA que corre 24/7 en tu computadora. Funciona en macOS, Linux y Windows (WSL). Usa Claude CLI como cerebro, Telegram como interfaz de chat, y archivos Markdown como memoria persistente.
 
+## Antes de empezar
+
+Este proyecto genera código que corre en tu máquina, instala dependencias, crea servicios del sistema, y conecta con APIs externas (Gmail, Telegram, GitHub, etc.). No es un juguete — es infraestructura real.
+
+Si no tienes experiencia técnica (terminal, Python, manejo de APIs), puedes usarlo bajo tu propio riesgo. Todo lo que genera es código abierto y legible, pero deberías tener a alguien técnico cerca si algo no funciona como esperas.
+
+Si sí tienes experiencia, lee el `SKILL.md` completo antes de correr la skill. Ahí está documentada toda la arquitectura: qué scripts genera, qué hacen, cómo se conectan entre sí. Ajusta lo que necesites antes de ejecutar — los guardrails de seguridad, las integraciones, el nivel de autonomía del agente. Es tu sistema, no el mío.
+
 ## Cómo funciona
 
 Este repo no contiene el código del segundo cerebro — contiene una **skill de Claude Code** que lo genera personalizado para ti. Tú llenas un cuestionario con tu perfil, plataformas y preferencias, y Claude genera todo el sistema adaptado a tu configuración: scripts, hooks, bot, daemons, memoria, y bootstrap.
